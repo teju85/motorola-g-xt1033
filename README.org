@@ -1,0 +1,110 @@
+* TODO XT1033 information
+** Device Info
+- Processor is ARMv7 Processor rev 3 (v7l)
+  - Num cores = 4
+  - Max Frequency = 1190MHz
+  - Instruction sets = armeabi-v7a, armeabi
+  - NEON support = Yes
+- Device details/specs are [[https://secretspecs.com/model/motorola/motorola-xt1033/][here]]
+- GPU is [[https://www.notebookcheck.net/Qualcomm-Adreno-305.110715.0.html][Adreno 305]]
+- Chipset is Qualcomm MSM8226 Snapdragon 400
+- More specs are [[https://www.gsmarena.com/motorola_moto_g-5831.php][here]]
+- StockROM is [[https://motostockrom.com/motorola-moto-g-xt1033][here]]
+- User guide is [[https://cdn1.allaboutmotog.com/wp-content/uploads/2013/12/moto-g-manual.pdf][here]]
+- It came with Jelly Bean (4.3) but upgradable to Lollipop (5.1.1)
+** Kernel source code
+- Main repo is: https://github.com/MotorolaMobilityLLC/kernel-msm
+- There's a branch named "lollipop-5.1.1-release-falcon" in this repo which is
+  the closest match to this device whose codename is 'falcon_umtsds'
+  (from ro.build.product)
+** TODO Booting to recovery
+- Reference [[https://www.hardreset.info/devices/flipkart/flipkart-901-digiflip-pro-xt/recovery-mode/][here]]
+  - Hold power button for a brief moment
+  - Hold both power and volume-down buttons for 5s
+  - As soon as the android robot shows up, release the buttons
+- Another approach is to just use adb!
+  - adb reboot bootloader
+** SW build info
+- from getprop output, it appears to have been built at build=LPBS23.13-56-2 (ro.build.id)
+- this doesn't corresponding to any tags from [[https://source.android.com/setup/start/build-numbers#build][this]] website!
+- However, atleast from the first letter, it appears that it is indeed Lollipop
+* TODO Getting device info
+** implement sysinfo.sh script
+- collects meminfo/cpuinfo/device-properties and others into a log file on the host
+- useful particularly to figure out the partitions to be
+  - read for creating backup stockROM
+  - prepare fstab file while building android from source
+** running the sysinfo.sh script
+- Install platform tools inside 'platform-tools' folder in the current dir first
+- then run the following command
+#+BEGIN_SRC
+./sysinfo.sh devinfo-XT1033 /sys/class/power_supply/max17047_battery
+cat devinfo
+#+END_SRC
+- Particularly inspect the file 'devinfo' for 'mmcblk' keyword
+- look them up in the section of 'df' for their corresponding dir names
+- this should also help with figuring out vendor binary locations
+- which in turn helps in writing the blobs-extracting script
+** TODO lsusb information
+- On cygwin you can install 'usbutils' package to get lsusb working
+- lsusb outputs
+  - the device is booted and under usb-debugging mode:
+    - Bus 001 Device 034: ID 8087:0a16 Intel Corp.
+  - in fastboot mode:
+    - Bus 001 Device 032: ID 8087:09ef Intel Corp.
+* TODO Enabling "fastboot devices"
+** on windows
+- Download the usb driver from [[https://androidadbdriver.com/digiflip-pro-xt901-usb-drivers/][this]] page
+  - a backup is also available on the [[https://drive.google.com/file/d/13fRXLEaCz2azPT8yUU_0g31NDhr9aNgg/view?usp=sharing][gdrive here]].
+- extract it
+- Enabling ADB Interface
+  - enable usb debugging
+  - go to device manager
+  - update its driver by choosing the "Android ADB interface"
+- Enabling bootloader interface
+  - run 'adb reboot bootloader'
+  - go to device manager
+  - update its driver by choosing the "Android Bootloader interface"
+- After this, 'fastboost devices' should work properly
+* TODO Setting up the android build environment
+** TODO Build branch
+- 
+** TODO figure out the build configuration for aosp + xt1033
+- refer to [[https://source.android.com/setup/build/building#initialize][this]] section
+  - name typically is of the following format: <tree>_<deviceCodename>-<buildtype>
+  - <buildtype> is one of:
+    - user
+    - userdebug
+    - eng
+  - from the prop=ro.product.manufacturer, manufacturer is 'manufacturer'
+  - from the prop=ro.product.device, device is 'falcon_umtsds'
+  - from the prop=ro.build.product, codename is 'falcon_umtsds'
+  - thus, product name will be 'aosp_falcon_umtsds'?????
+  - getprop doesn't seem to show the kernel version against which stockrom was built!
+  - `ro.serialno` - serial number that's seen while connecting via adb/fastboot
+- refer also to the 'adding a new device' doc [[https://source.android.com/setup/develop/new-device#userdebug-guidelines][here]]
+* TODO rooting Moto G
+- a very nice introduction to rooting on android is [[https://jichu4n.com/posts/how-rooting-works-a-technical-explanation-of-the-android-rooting-process/][here]]
+- Download [[http://download1652.mediafire.com/iqfivcj7gzfg/yj8o5xysqkty1d1/Root+scri%27%2B%27pt+for+DigiFlip+Pro.zip][this]] zip file
+  - It is also backed-up on [[https://drive.google.com/file/d/1TDiMHMJ0YF2BKMrU5frdgBef4c_Ju5M6/view?usp=sharing][gdrive here]]
+- unzip and follow instructions in its README
+- superuser github repo is [[https://github.com/koush/Superuser][here]]
+- UPDATE: I think we don't need this as most of the job is done via "adb"
+* TODO how to extract the stock ROM and store it as a backup?
+* TODO how to extract proprietary blobs?
+- Refer to [[https://github.com/gmarkall/android_device_ideapad_a1/tree/ics][repo]] on github
+- look at the script extract-files.sh
+* TODO Read [[http://translate.googleusercontent.com/translate_c?depth=1&hl=en&prev=search&rurl=translate.google.com&sl=ru&sp=nmt4&u=http://4pda.ru/forum/index.php%3Fshowtopic%3D499488%26st%3D2660&xid=17259,15700023,15700186,15700191,15700256,15700259,15700262&usg=ALkJrhgsWVo5CmykIFKsXLm1e6_w9MMz2g][this]] thread on russian forum about extensive discussion on Z2580 chipset
+* TODO Another [[http://translate.google.com/translate?hl=en&sl=ru&u=http://4pda.ru/forum/lofiversion/index.php%3Ft499488-2060.html&prev=search][discussion]] about a possible lollipop update to this chipset!?
+* TODO Another [[https://translate.google.com/translate?sl=auto&tl=en&js=y&prev=_t&hl=en&ie=UTF-8&u=http%3A%2F%2Fwww.htcmania.com%2Fshowthread.php%3Ft%3D1023879&edit-text=][discussion]] that alludes the above links for more details
+* TODO read about TWRP recovery and perform fastboot to custom recovery
+** TODO building from source
+- source code is [[https://github.com/omnirom/android_bootable_recovery/][here]]
+- compilation guide is [[https://forum.xda-developers.com/showthread.php?t=1943625][here]]
+- minimal manifest for aosp is [[https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp][here]]
+** TODO booting to custom recovery without flashing it
+#+BEGIN_SRC
+adb reboot bootloader
+fastboot boot /path/to/your/custom/recovery.img
+#+END_SRC
+* TODO Verify that the custom recoveries can be "fastboot"ed into
