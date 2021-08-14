@@ -14,9 +14,11 @@
 - It came with Jelly Bean (4.3) but upgradable to Lollipop (5.1.1)
 ** Kernel source code
 - Main repo is: https://github.com/MotorolaMobilityLLC/kernel-msm
-- There's a branch named "lollipop-5.1.1-release-falcon" in this repo which is
-  the closest match to this device whose codename is 'falcon_umtsds'
-  (from ro.build.product)
+  - There's a branch named "lollipop-5.1.1-release-falcon" in this repo which is
+    the closest match to this device whose codename is 'falcon_umtsds'
+    (from ro.build.product)
+- There's also one from LineageOS here: https://github.com/LineageOS/android_kernel_motorola_msm8226
+  - this however seems to support upto Nougat too!
 ** TODO Booting to recovery
 - Reference [[https://www.hardreset.info/devices/flipkart/flipkart-901-digiflip-pro-xt/recovery-mode/][here]]
   - Hold power button for a brief moment
@@ -92,11 +94,8 @@ cat devinfo
 - UPDATE: I think we don't need this as most of the job is done via "adb"
 * TODO how to extract the stock ROM and store it as a backup?
 * TODO how to extract proprietary blobs?
-- Refer to [[https://github.com/gmarkall/android_device_ideapad_a1/tree/ics][repo]] on github
+- Refer to [[https://github.com/LineageOS/android_device_motorola_falcon][repo]] on github
 - look at the script extract-files.sh
-* TODO Read [[http://translate.googleusercontent.com/translate_c?depth=1&hl=en&prev=search&rurl=translate.google.com&sl=ru&sp=nmt4&u=http://4pda.ru/forum/index.php%3Fshowtopic%3D499488%26st%3D2660&xid=17259,15700023,15700186,15700191,15700256,15700259,15700262&usg=ALkJrhgsWVo5CmykIFKsXLm1e6_w9MMz2g][this]] thread on russian forum about extensive discussion on Z2580 chipset
-* TODO Another [[http://translate.google.com/translate?hl=en&sl=ru&u=http://4pda.ru/forum/lofiversion/index.php%3Ft499488-2060.html&prev=search][discussion]] about a possible lollipop update to this chipset!?
-* TODO Another [[https://translate.google.com/translate?sl=auto&tl=en&js=y&prev=_t&hl=en&ie=UTF-8&u=http%3A%2F%2Fwww.htcmania.com%2Fshowthread.php%3Ft%3D1023879&edit-text=][discussion]] that alludes the above links for more details
 * TODO read about TWRP recovery and perform fastboot to custom recovery
 ** TODO building from source
 - source code is [[https://github.com/omnirom/android_bootable_recovery/][here]]
