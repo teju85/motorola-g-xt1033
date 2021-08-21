@@ -85,6 +85,35 @@ cat devinfo
   - getprop doesn't seem to show the kernel version against which stockrom was built!
   - `ro.serialno` - serial number that's seen while connecting via adb/fastboot
 - refer also to the 'adding a new device' doc [[https://source.android.com/setup/develop/new-device#userdebug-guidelines][here]]
+* Install stock ROM
+- [[https://www.mediafire.com/file/bd8shlx4jdk0rhx/Motorola_Moto_G_XT1033_Falcon_ASIA_DS_5.1_LPBS23.13-56-2_CID7_CFC.zip/file][this]] link contains the stock ROM (v5.1.1). Download and extract it. I've also
+  uploaded a copy of it to my [[https://drive.google.com/file/d/1mp4JUUgRBhtFclAbH5tKXmD8SiK7z84I/view?usp=sharing][gdrive here]].
+- [[https://downloadmirror.co/29Sh/mfastboot-v2.zip%253Fpt%253D2PAv5CGjMrXGg0ggGevHoXzbVdbp6Sp7aLrXE9XMCoo%25253D][this]] link contains the mfastboot v2 exe. Download and extract it. I've also
+  uploaded a copy of it to my [[https://drive.google.com/file/d/1CtxJWzcZO9ZjtaYi4jEh18DMJVpqTQb7/view?usp=sharing][gdrive here]]. It is also available from Moto's
+  website [[https://motorola-global-portal.custhelp.com/app/standalone/bootloader/recovery-images][here]]. (although I couldn't find the exact one for XT1033)
+- Connect your device and boot it into bootloader
+- Run the following commands
+  #+BEGIN_SRC
+  mfastboot.exe flash partition gpt.bin
+  mfastboot.exe flash motoboot motoboot.img
+  mfastboot.exe flash logo logo.bin
+  mfastboot.exe flash boot boot.img
+  mfastboot.exe flash recovery recovery.img
+  mfastboot.exe flash system system.img_sparsechunk.0
+  mfastboot.exe flash system system.img_sparsechunk.1
+  mfastboot.exe flash system system.img_sparsechunk.2
+  mfastboot.exe flash system system.img_sparsechunk.3
+  mfastboot.exe flash modem NON-HLOS.bin
+  mfastboot.exe erase modemst1 
+  mfastboot.exe erase modemst2 
+  mfastboot.exe flash fsg fsg.mbn
+  mfastboot.exe erase cache 
+  mfastboot.exe erase userdata
+  mfastboot.exe reboot
+  #+END_SRC
+- the above same steps can also be followed to unbrick your device too
+- on forums many folks have had success by just using fastboot instead of "mfastboot"
+  (which is supposed to be motorola's fastboot)
 * TODO rooting Moto G
 - a very nice introduction to rooting on android is [[https://jichu4n.com/posts/how-rooting-works-a-technical-explanation-of-the-android-rooting-process/][here]]
 - Download [[http://download1652.mediafire.com/iqfivcj7gzfg/yj8o5xysqkty1d1/Root+scri%27%2B%27pt+for+DigiFlip+Pro.zip][this]] zip file

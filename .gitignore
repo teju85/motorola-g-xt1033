@@ -1,0 +1,16 @@
+latest_usb_driver_windows.zip
+usb_driver/
+
+platform-tools/
+
+mfastboot-v2.zip
+AdbWinApi.dll
+AdbWinUsbApi.dll
+aapt.exe
+adb.exe
+desktop.ini
+linux-fastboot
+mfastboot.exe
+osx-fastboot
+
+Motorola_Moto_G_XT1033_Falcon_ASIA_DS_5.1_LPBS23.13-56-2_CID7_CFC.zip
