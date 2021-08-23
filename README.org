@@ -116,6 +116,24 @@ cat devinfo-XT1033
 - solution here is to first unlock the bootloader and then retry the above commands
 - after you have booted to TWRP
 - You can also run the sysinfo.sh script if being curios!
+** TODO Flash TWRP recovery
+- running the following commands should work
+  #+BEGIN_SRC
+  adb reboot bootloader
+  fastboot flash recovery /path/to/your/custom/recovery.img
+  fastboot reboot
+  #+END_SRC
+- however, while using TWRP, the above flash command seems to succeed with the
+  following output on the commandline
+  #+BEGIN_SRC
+  (bootloader) has-slot:recovery: not found
+  (bootloader) is-logical:recovery: not found
+  Sending 'recovery' (9624 KB)                       OKAY [  0.329s]
+  Writing 'recovery'                                 OKAY [  0.559s]
+  Finished. Total time: 0.936s
+  #+END_SRC
+- however, in the screen's commandline, it seems to fail due to
+  "Mismatched partition size (recovery)"
 ** TODO building from source
 - source code is [[https://github.com/omnirom/android_bootable_recovery/][here]]
 - compilation guide is [[https://forum.xda-developers.com/showthread.php?t=1943625][here]]
@@ -228,13 +246,6 @@ cat devinfo-XT1033
   - getprop doesn't seem to show the kernel version against which stockrom was built!
   - `ro.serialno` - serial number that's seen while connecting via adb/fastboot
 - refer also to the 'adding a new device' doc [[https://source.android.com/setup/develop/new-device#userdebug-guidelines][here]]
-* TODO rooting Moto G
-- a very nice introduction to rooting on android is [[https://jichu4n.com/posts/how-rooting-works-a-technical-explanation-of-the-android-rooting-process/][here]]
-- Download [[http://download1652.mediafire.com/iqfivcj7gzfg/yj8o5xysqkty1d1/Root+scri%27%2B%27pt+for+DigiFlip+Pro.zip][this]] zip file
-  - It is also backed-up on [[https://drive.google.com/file/d/1TDiMHMJ0YF2BKMrU5frdgBef4c_Ju5M6/view?usp=sharing][gdrive here]]
-- unzip and follow instructions in its README
-- superuser github repo is [[https://github.com/koush/Superuser][here]]
-- UPDATE: I think we don't need this as most of the job is done via "adb"
 * TODO how to extract proprietary blobs?
 - Refer to [[https://github.com/LineageOS/android_device_motorola_falcon][repo]] on github
 - look at the script extract-files.sh
