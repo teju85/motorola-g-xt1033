@@ -1,4 +1,4 @@
-* TODO XT1033 information
+* XT1033 information
 ** Device Info
 - Processor is ARMv7 Processor rev 3 (v7l)
   - Num cores = 4
@@ -12,6 +12,44 @@
 - StockROM is [[https://motostockrom.com/motorola-moto-g-xt1033][here]]
 - User guide is [[https://cdn1.allaboutmotog.com/wp-content/uploads/2013/12/moto-g-manual.pdf][here]]
 - It came with Jelly Bean (4.3) but upgradable to Lollipop (5.1.1)
+** Getting device info
+*** implement sysinfo.sh script
+- collects meminfo/cpuinfo/device-properties and others into a log file on the host
+- useful particularly to figure out the partitions to be
+  - read for creating backup stockROM
+  - prepare fstab file while building android from source
+*** running the sysinfo.sh script
+- Install platform tools inside 'platform-tools' folder in the current dir first
+- then run the following command
+#+BEGIN_SRC
+./sysinfo.sh devinfo-XT1033 /sys/class/power_supply/max17047_battery
+cat devinfo-XT1033
+#+END_SRC
+- Particularly inspect the file 'devinfo' for 'mmcblk' keyword
+- look them up in the section of 'df' for their corresponding dir names
+- this should also help with figuring out vendor binary locations
+- which in turn helps in writing the blobs-extracting script
+** Booting to recovery and enabling "fastboot devices"
+- Reference [[https://www.hardreset.info/devices/flipkart/flipkart-901-digiflip-pro-xt/recovery-mode/][here]]
+  - Hold power button for a brief moment
+  - Hold both power and volume-down buttons for 5s
+  - As soon as the android robot shows up, release the buttons
+- Another approach is to just use adb!
+  #+BEGIN_SRC
+  adb reboot bootloader
+  fastboot devices
+  #+END_SRC
+** lsusb information
+- On cygwin you can install 'usbutils' package to get lsusb working
+- lsusb outputs
+  - the device is booted and under usb-debugging mode:
+    - Bus 001 Device 049: ID 22b8:2e76 Motorola PCS
+  - in fastboot mode:
+    - Bus 001 Device 044: ID 22b8:2e80 Motorola PCS
+** SW build info
+- from getprop output, it appears to have been built at build=LPBS23.13-56-2 (ro.build.id)
+- this doesn't corresponding to any tags from [[https://source.android.com/setup/start/build-numbers#build][this]] website!
+- However, atleast from the first letter, it appears that it is indeed Lollipop
 ** Kernel source code
 - Main repo is: https://github.com/MotorolaMobilityLLC/kernel-msm
   - There's a branch named "lollipop-5.1.1-release-falcon" in this repo which is
@@ -19,55 +57,7 @@
     (from ro.build.product)
 - There's also one from LineageOS here: https://github.com/LineageOS/android_kernel_motorola_msm8226
   - this however seems to support upto Nougat too!
-** TODO Booting to recovery
-- Reference [[https://www.hardreset.info/devices/flipkart/flipkart-901-digiflip-pro-xt/recovery-mode/][here]]
-  - Hold power button for a brief moment
-  - Hold both power and volume-down buttons for 5s
-  - As soon as the android robot shows up, release the buttons
-- Another approach is to just use adb!
-  - adb reboot bootloader
-** SW build info
-- from getprop output, it appears to have been built at build=LPBS23.13-56-2 (ro.build.id)
-- this doesn't corresponding to any tags from [[https://source.android.com/setup/start/build-numbers#build][this]] website!
-- However, atleast from the first letter, it appears that it is indeed Lollipop
-* TODO Getting device info
-** implement sysinfo.sh script
-- collects meminfo/cpuinfo/device-properties and others into a log file on the host
-- useful particularly to figure out the partitions to be
-  - read for creating backup stockROM
-  - prepare fstab file while building android from source
-** running the sysinfo.sh script
-- Install platform tools inside 'platform-tools' folder in the current dir first
-- then run the following command
-#+BEGIN_SRC
-./sysinfo.sh devinfo-XT1033 /sys/class/power_supply/max17047_battery
-cat devinfo
-#+END_SRC
-- Particularly inspect the file 'devinfo' for 'mmcblk' keyword
-- look them up in the section of 'df' for their corresponding dir names
-- this should also help with figuring out vendor binary locations
-- which in turn helps in writing the blobs-extracting script
-** TODO lsusb information
-- On cygwin you can install 'usbutils' package to get lsusb working
-- lsusb outputs
-  - the device is booted and under usb-debugging mode:
-    - Bus 001 Device 034: ID 8087:0a16 Intel Corp.
-  - in fastboot mode:
-    - Bus 001 Device 032: ID 8087:09ef Intel Corp.
-* TODO Enabling "fastboot devices"
-** on windows
-- Download the usb driver from [[https://androidadbdriver.com/digiflip-pro-xt901-usb-drivers/][this]] page
-  - a backup is also available on the [[https://drive.google.com/file/d/13fRXLEaCz2azPT8yUU_0g31NDhr9aNgg/view?usp=sharing][gdrive here]].
-- extract it
-- Enabling ADB Interface
-  - enable usb debugging
-  - go to device manager
-  - update its driver by choosing the "Android ADB interface"
-- Enabling bootloader interface
-  - run 'adb reboot bootloader'
-  - go to device manager
-  - update its driver by choosing the "Android Bootloader interface"
-- After this, 'fastboost devices' should work properly
+  - There's also another "common device config" source from LineageOS here: https://github.com/LineageOS/android_device_motorola_msm8226-common???
 * TODO Setting up the android build environment
 ** TODO Build branch
 - 
@@ -87,29 +77,34 @@ cat devinfo
 - refer also to the 'adding a new device' doc [[https://source.android.com/setup/develop/new-device#userdebug-guidelines][here]]
 * Install stock ROM
 - [[https://www.mediafire.com/file/bd8shlx4jdk0rhx/Motorola_Moto_G_XT1033_Falcon_ASIA_DS_5.1_LPBS23.13-56-2_CID7_CFC.zip/file][this]] link contains the stock ROM (v5.1.1). Download and extract it. I've also
-  uploaded a copy of it to my [[https://drive.google.com/file/d/1mp4JUUgRBhtFclAbH5tKXmD8SiK7z84I/view?usp=sharing][gdrive here]].
+  uploaded a copy of it to my [[https://drive.google.com/file/d/1mp4JUUgRBhtFclAbH5tKXmD8SiK7z84I/view?usp=sharing][gdrive heREADME.orgre]].
 - [[https://downloadmirror.co/29Sh/mfastboot-v2.zip%253Fpt%253D2PAv5CGjMrXGg0ggGevHoXzbVdbp6Sp7aLrXE9XMCoo%25253D][this]] link contains the mfastboot v2 exe. Download and extract it. I've also
   uploaded a copy of it to my [[https://drive.google.com/file/d/1CtxJWzcZO9ZjtaYi4jEh18DMJVpqTQb7/view?usp=sharing][gdrive here]]. It is also available from Moto's
-  website [[https://motorola-global-portal.custhelp.com/app/standalone/bootloader/recovery-images][here]]. (although I couldn't find the exact one for XT1033)
+  website [[https://motorola-global-portal.custhelp.com/app/standalone/bootloader/recovery-images][here]]. (although I couldn't find the exact one for XT1033). This should
+  NOT be needed as long as you have 'fastboot'!!
 - Connect your device and boot it into bootloader
 - Run the following commands
   #+BEGIN_SRC
-  mfastboot.exe flash partition gpt.bin
-  mfastboot.exe flash motoboot motoboot.img
-  mfastboot.exe flash logo logo.bin
-  mfastboot.exe flash boot boot.img
-  mfastboot.exe flash recovery recovery.img
-  mfastboot.exe flash system system.img_sparsechunk.0
-  mfastboot.exe flash system system.img_sparsechunk.1
-  mfastboot.exe flash system system.img_sparsechunk.2
-  mfastboot.exe flash system system.img_sparsechunk.3
-  mfastboot.exe flash modem NON-HLOS.bin
-  mfastboot.exe erase modemst1 
-  mfastboot.exe erase modemst2 
-  mfastboot.exe flash fsg fsg.mbn
-  mfastboot.exe erase cache 
-  mfastboot.exe erase userdata
-  mfastboot.exe reboot
+  fastboot.exe flash partition gpt.bin
+  fastboot.exe flash motoboot motoboot.img
+  fastboot.exe flash logo logo.bin
+  fastboot.exe flash boot boot.img
+  fastboot.exe flash recovery recovery.img
+  fastboot.exe flash dsp adspso.bin
+  fastboot.exe flash oem oem.img
+  fastboot.exe flash system system.img_sparsechunk.0
+  fastboot.exe flash system system.img_sparsechunk.1
+  fastboot.exe flash system system.img_sparsechunk.2
+  fastboot.exe flash system system.img_sparsechunk.3
+  fastboot.exe flash modem NON-HLOS.bin
+  fastboot.exe erase modemst1 
+  fastboot.exe erase modemst2 
+  fastboot.exe flash fsg fsg.mbn
+  fastboot.exe erase cache
+  fastboot.exe erase userdata
+  fastboot.exe erase customize
+  fastboot.exe erase clogo
+  fastboot.exe reboot
   #+END_SRC
 - the above same steps can also be followed to unbrick your device too
 - on forums many folks have had success by just using fastboot instead of "mfastboot"
@@ -135,4 +130,4 @@ cat devinfo
 adb reboot bootloader
 fastboot boot /path/to/your/custom/recovery.img
 #+END_SRC
-* TODO Verify that the custom recoveries can be "fastboot"ed into
+** TODO Verify that the custom recoveries can be "fastboot"ed into
