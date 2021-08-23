@@ -23,6 +23,7 @@ function collectAllInfo() {
     getFileContents /proc/meminfo
     getFileContents /proc/mounts
     getFileContents /proc/partitions
+    getCommandOutput "ls -l /dev/block/platform/msm_sdcc.1/by-name"
     getCommandOutput df
     getCommandOutput uptime
     getCommandOutput getprop

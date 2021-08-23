@@ -42,10 +42,16 @@ cat devinfo-XT1033
 ** lsusb information
 - On cygwin you can install 'usbutils' package to get lsusb working
 - lsusb outputs
-  - the device is booted and under usb-debugging mode:
-    - Bus 001 Device 049: ID 22b8:2e76 Motorola PCS
-  - in fastboot mode:
-    - Bus 001 Device 044: ID 22b8:2e80 Motorola PCS
+  - the device is booted and under usb-debugging mode
+    - locked bootloader
+      - Bus 001 Device 049: ID 22b8:2e76 Motorola PCS
+    - unlocked bootloader
+      - Bus 001 Device 017: ID 22b8:2e76 Motorola PCS
+  - in fastboot mode
+    - locked bootloader
+      - Bus 001 Device 044: ID 22b8:2e80 Motorola PCS
+    - unlocked bootloader
+      - Bus 001 Device 018: ID 22b8:2e80 Motorola PCS
 ** SW build info
 - from getprop output, it appears to have been built at build=LPBS23.13-56-2 (ro.build.id)
 - this doesn't corresponding to any tags from [[https://source.android.com/setup/start/build-numbers#build][this]] website!
@@ -58,24 +64,64 @@ cat devinfo-XT1033
 - There's also one from LineageOS here: https://github.com/LineageOS/android_kernel_motorola_msm8226
   - this however seems to support upto Nougat too!
   - There's also another "common device config" source from LineageOS here: https://github.com/LineageOS/android_device_motorola_msm8226-common???
-* TODO Setting up the android build environment
-** TODO Build branch
-- 
-** TODO figure out the build configuration for aosp + xt1033
-- refer to [[https://source.android.com/setup/build/building#initialize][this]] section
-  - name typically is of the following format: <tree>_<deviceCodename>-<buildtype>
-  - <buildtype> is one of:
-    - user
-    - userdebug
-    - eng
-  - from the prop=ro.product.manufacturer, manufacturer is 'manufacturer'
-  - from the prop=ro.product.device, device is 'falcon_umtsds'
-  - from the prop=ro.build.product, codename is 'falcon_umtsds'
-  - thus, product name will be 'aosp_falcon_umtsds'?????
-  - getprop doesn't seem to show the kernel version against which stockrom was built!
-  - `ro.serialno` - serial number that's seen while connecting via adb/fastboot
-- refer also to the 'adding a new device' doc [[https://source.android.com/setup/develop/new-device#userdebug-guidelines][here]]
-* Install stock ROM
+* Unlocking the bootloader
+- follow the steps as described in motorola's webpage [[https://motorola-global-portal.custhelp.com/app/standalone/bootloader/unlock-your-device-b][here]].
+- get the unlock key
+  #+BEGIN_SRC
+  adb reboot bootloader
+  fastboot oem get_unlock_data
+  ## copy the unlock key from above and paste into motorola's webpage
+  ## you will receive your unique key for unlocking on your registered email ID
+  ## Note:
+  ##  1. that this will void your warranty!!
+  ##  2. will factory reset your device!!
+  fastboot oem unlock <thisUniqueKey>
+  ## Interestingly, the above command will show up as an error as follows! But
+  ## actually the unlocking would have succeeded.
+  # (bootloader) Unlock code = ....
+  # (bootloader) Failed to erase partition
+  # (bootloader) General Unlock failure!
+  # (bootloader) OEM unlock failure!
+  # FAILED (remote: '')
+  # fastboot: error: Command failed
+  fastboot reboot
+  #+END_SRC
+- ignore the last error and just do "fastboot reboot", you will now receive a
+  warning message saying that your bootloader is unlocked.
+- note that the above reboot might take quite a bit of time!
+- if you don't unlock your bootloader, then flashing custom recoveries will fail
+  as described in the next section!
+* TODO custom recovery
+** Verify that the TWRP can be "fastboot"ed into
+- TWRP builds for this device can be found [[https://twrp.me/motorola/motorolamotog2013.html][here]]. Download the latest
+- Now boot to recovery and use fastboot to boot to this recovery without flashing it
+  #+BEGIN_SRC
+  adb reboot bootloader
+  ## to boot without flashing
+  fastboot boot /path/to/your/custom/recovery.img
+  ## Sadly, the above will fail with the following error! (if bootloader is not unlocked)
+  # Sending 'boot.img' (9624 KB)                       OKAY [  0.316s]
+  # Booting                                            FAILED (remote: '')
+  # fastboot: error: Command failed
+  ## to flash custom recovery
+  fastboot flash recovery /path/to/your/custom/recovery.img
+  #+END_SRC
+- And now when you try to do "fastboot reboot", it fails with the error:
+  "fastboot reason: UTAG "flashfail" configured as fastboot" shown in the recovery
+  mode screen! Solution to this is to reflash 'motoboot.img' from the stock ROM
+  #+BEGIN_SRC
+  fastboot flash motoboot motoboot.img
+  fastboot reboot
+  #+END_SRC
+- solution here is to first unlock the bootloader and then retry the above commands
+- after you have booted to TWRP
+- You can also run the sysinfo.sh script if being curios!
+** TODO building from source
+- source code is [[https://github.com/omnirom/android_bootable_recovery/][here]]
+- compilation guide is [[https://forum.xda-developers.com/showthread.php?t=1943625][here]]
+- minimal manifest for aosp is [[https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp][here]]
+* Stock ROM
+** Installation
 - [[https://www.mediafire.com/file/bd8shlx4jdk0rhx/Motorola_Moto_G_XT1033_Falcon_ASIA_DS_5.1_LPBS23.13-56-2_CID7_CFC.zip/file][this]] link contains the stock ROM (v5.1.1). Download and extract it. I've also
   uploaded a copy of it to my [[https://drive.google.com/file/d/1mp4JUUgRBhtFclAbH5tKXmD8SiK7z84I/view?usp=sharing][gdrive heREADME.orgre]].
 - [[https://downloadmirror.co/29Sh/mfastboot-v2.zip%253Fpt%253D2PAv5CGjMrXGg0ggGevHoXzbVdbp6Sp7aLrXE9XMCoo%25253D][this]] link contains the mfastboot v2 exe. Download and extract it. I've also
@@ -109,6 +155,79 @@ cat devinfo-XT1033
 - the above same steps can also be followed to unbrick your device too
 - on forums many folks have had success by just using fastboot instead of "mfastboot"
   (which is supposed to be motorola's fastboot)
+** how to extract the stock ROM and store it as a backup?
+- boot to custom recovery without flashing and when you run 'adb shell'
+  the shell will already be running as root!
+- Now run the below command to get to know all the partitions:
+  #+BEGIN_SRC
+  ls -l /dev/block/platform/msm_sdcc.1/by-name
+  # __bionic_open_tzdata: couldn't find any tzdata when looking for localtime!
+  # __bionic_open_tzdata: couldn't find any tzdata when looking for GMT!
+  # __bionic_open_tzdata: couldn't find any tzdata when looking for posixrules!
+  # lrwxrwxrwx    1 root     root            20 Jan 16  1970 DDR -> /dev/block/mmcblk0p3
+  # lrwxrwxrwx    1 root     root            20 Jan 16  1970 aboot -> /dev/block/mmcblk0p4
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 abootBackup -> /dev/block/mmcblk0p11
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 boot -> /dev/block/mmcblk0p31
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 cache -> /dev/block/mmcblk0p33
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 cid -> /dev/block/mmcblk0p25
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 clogo -> /dev/block/mmcblk0p28
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 dhob -> /dev/block/mmcblk0p20
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 fsc -> /dev/block/mmcblk0p22
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 fsg -> /dev/block/mmcblk0p21
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 hob -> /dev/block/mmcblk0p19
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 kpan -> /dev/block/mmcblk0p35
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 logo -> /dev/block/mmcblk0p27
+  # lrwxrwxrwx    1 root     root            20 Jan 16  1970 logs -> /dev/block/mmcblk0p9
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 misc -> /dev/block/mmcblk0p30
+  # lrwxrwxrwx    1 root     root            20 Jan 16  1970 modem -> /dev/block/mmcblk0p1
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 modemst1 -> /dev/block/mmcblk0p17
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 modemst2 -> /dev/block/mmcblk0p18
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 padA -> /dev/block/mmcblk0p10
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 padB -> /dev/block/mmcblk0p16
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 pds -> /dev/block/mmcblk0p26
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 persist -> /dev/block/mmcblk0p29
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 recovery -> /dev/block/mmcblk0p32
+  # lrwxrwxrwx    1 root     root            20 Jan 16  1970 rpm -> /dev/block/mmcblk0p5
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 rpmBackup -> /dev/block/mmcblk0p12
+  # lrwxrwxrwx    1 root     root            20 Jan 16  1970 sbl1 -> /dev/block/mmcblk0p2
+  # lrwxrwxrwx    1 root     root            20 Jan 16  1970 sdi -> /dev/block/mmcblk0p7
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 sdiBackup -> /dev/block/mmcblk0p14
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 sp -> /dev/block/mmcblk0p24
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 ssd -> /dev/block/mmcblk0p23
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 system -> /dev/block/mmcblk0p34
+  # lrwxrwxrwx    1 root     root            20 Jan 16  1970 tz -> /dev/block/mmcblk0p6
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 tzBackup -> /dev/block/mmcblk0p13
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 userdata -> /dev/block/mmcblk0p36
+  # lrwxrwxrwx    1 root     root            20 Jan 16  1970 utags -> /dev/block/mmcblk0p8
+  # lrwxrwxrwx    1 root     root            21 Jan 16  1970 utagsBackup -> /dev/block/mmcblk0p15
+  #+END_SRC
+- From this onwards, you can just run the below command on each of the partition
+  and take its backup (from inside adb shell)
+  #+BEGIN_SRC
+  dd if=/dev/block/mmcblk0p31 of=/sdcard/boot.img
+  #+END_SRC
+- then after existing from the shell, pull these image files from the phone to your machine
+  #+BEGIN_SRC
+  adb pull /sdcard/boot.img boot.img
+  #+END_SRC
+- Refer to [[https://forum.xda-developers.com/t/motorola-moto-g-partitions-explained.3418644/][this]] thread for more descriptions of these partitions
+* TODO Setting up the android build environment
+** TODO Build branch
+- 
+** TODO figure out the build configuration for aosp + xt1033
+- refer to [[https://source.android.com/setup/build/building#initialize][this]] section
+  - name typically is of the following format: <tree>_<deviceCodename>-<buildtype>
+  - <buildtype> is one of:
+    - user
+    - userdebug
+    - eng
+  - from the prop=ro.product.manufacturer, manufacturer is 'manufacturer'
+  - from the prop=ro.product.device, device is 'falcon_umtsds'
+  - from the prop=ro.build.product, codename is 'falcon_umtsds'
+  - thus, product name will be 'aosp_falcon_umtsds'?????
+  - getprop doesn't seem to show the kernel version against which stockrom was built!
+  - `ro.serialno` - serial number that's seen while connecting via adb/fastboot
+- refer also to the 'adding a new device' doc [[https://source.android.com/setup/develop/new-device#userdebug-guidelines][here]]
 * TODO rooting Moto G
 - a very nice introduction to rooting on android is [[https://jichu4n.com/posts/how-rooting-works-a-technical-explanation-of-the-android-rooting-process/][here]]
 - Download [[http://download1652.mediafire.com/iqfivcj7gzfg/yj8o5xysqkty1d1/Root+scri%27%2B%27pt+for+DigiFlip+Pro.zip][this]] zip file
@@ -116,18 +235,6 @@ cat devinfo-XT1033
 - unzip and follow instructions in its README
 - superuser github repo is [[https://github.com/koush/Superuser][here]]
 - UPDATE: I think we don't need this as most of the job is done via "adb"
-* TODO how to extract the stock ROM and store it as a backup?
 * TODO how to extract proprietary blobs?
 - Refer to [[https://github.com/LineageOS/android_device_motorola_falcon][repo]] on github
 - look at the script extract-files.sh
-* TODO read about TWRP recovery and perform fastboot to custom recovery
-** TODO building from source
-- source code is [[https://github.com/omnirom/android_bootable_recovery/][here]]
-- compilation guide is [[https://forum.xda-developers.com/showthread.php?t=1943625][here]]
-- minimal manifest for aosp is [[https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp][here]]
-** TODO booting to custom recovery without flashing it
-#+BEGIN_SRC
-adb reboot bootloader
-fastboot boot /path/to/your/custom/recovery.img
-#+END_SRC
-** TODO Verify that the custom recoveries can be "fastboot"ed into
