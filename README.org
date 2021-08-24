@@ -116,7 +116,7 @@ cat devinfo-XT1033
 - solution here is to first unlock the bootloader and then retry the above commands
 - after you have booted to TWRP
 - You can also run the sysinfo.sh script if being curios!
-** TODO Flash TWRP recovery
+** Flash TWRP recovery
 - running the following commands should work
   #+BEGIN_SRC
   adb reboot bootloader
@@ -133,7 +133,12 @@ cat devinfo-XT1033
   Finished. Total time: 0.936s
   #+END_SRC
 - however, in the screen's commandline, it seems to fail due to
-  "Mismatched partition size (recovery)"
+  "Mismatched partition size (recovery)". But you can safely ignore this error.
+- However, instead of rebooting using the commandline, use the volume down button
+  to select the 'Recovery' option and then reboot by selecting the volume up
+  button
+- Doing anything else apart from the above steps never got me to booting to TWRP!
+- Reference: https://www.droidthunder.com/root-install-twrp-recovery-moto-g-2013/
 ** TODO building from source
 - source code is [[https://github.com/omnirom/android_bootable_recovery/][here]]
 - compilation guide is [[https://forum.xda-developers.com/showthread.php?t=1943625][here]]
@@ -176,7 +181,8 @@ cat devinfo-XT1033
 ** how to extract the stock ROM and store it as a backup?
 - boot to custom recovery without flashing and when you run 'adb shell'
   the shell will already be running as root!
-- Now run the below command to get to know all the partitions:
+- or one can just root their phone and then run the following commands as root
+- Run the below command to get to know all the partitions:
   #+BEGIN_SRC
   ls -l /dev/block/platform/msm_sdcc.1/by-name
   # __bionic_open_tzdata: couldn't find any tzdata when looking for localtime!
@@ -224,11 +230,25 @@ cat devinfo-XT1033
   #+BEGIN_SRC
   dd if=/dev/block/mmcblk0p31 of=/sdcard/boot.img
   #+END_SRC
-- then after existing from the shell, pull these image files from the phone to your machine
+- then after exiting from the shell, pull these image files from the phone to your machine
   #+BEGIN_SRC
   adb pull /sdcard/boot.img boot.img
   #+END_SRC
 - Refer to [[https://forum.xda-developers.com/t/motorola-moto-g-partitions-explained.3418644/][this]] thread for more descriptions of these partitions
+* TODO Custom ROM
+** TODO LineageOS ROM - Android 9
+- [[https://www.droidthunder.com/android-9-0-pie-on-moto-g/][This]] article has detailed instructions on how to install Android 9 on this device
+- Download the LineageOS ROM and gapps .zip files from the above link (for gapps
+  a micro is sufficient, IMO)
+  - I have also uploaded these onto my gdrive here and here, respectively.
+- Copy them onto your phone's internal memory
+- Reboot to TWRP recovery
+- Select the "Wipe" option and begin the factory reset process
+- Select the "Wipe" -> "Advanced Wipe" options and select all of Dalvik cache,
+  system, data and cache partitions and initiate wiping
+- Select the "Install" option from main menu and select the LineageOS ROM
+- Select the "Install" option from main menu and select the gapps suite
+- "Reboot" -> "System"
 * TODO Setting up the android build environment
 ** TODO Build branch
 - 
