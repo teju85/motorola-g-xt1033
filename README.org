@@ -240,7 +240,7 @@ cat devinfo-XT1033
 - [[https://www.droidthunder.com/android-9-0-pie-on-moto-g/][This]] article has detailed instructions on how to install Android 9 on this device
 - Download the LineageOS ROM and gapps .zip files from the above link (for gapps
   a micro is sufficient, IMO)
-  - I have also uploaded these onto my gdrive here and here, respectively.
+  - I have also uploaded these onto my gdrive [[https://drive.google.com/file/d/1NpVVayYxHaOYLu2eqB_vZhTzWoNBzq6O/view?usp=sharing][here]] and [[https://drive.google.com/file/d/1wcbb5s40yyglhbU8HkmVg_97_-6act1D/view?usp=sharing][here]], respectively.
 - Copy them onto your phone's internal memory
 - Reboot to TWRP recovery
 - Select the "Wipe" option and begin the factory reset process
