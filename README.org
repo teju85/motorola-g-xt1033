@@ -274,3 +274,6 @@ cat devinfo-XT1033
 * TODO how to extract proprietary blobs?
 - Refer to [[https://github.com/LineageOS/android_device_motorola_falcon][repo]] on github
 - look at the script extract-files.sh
+* Miscellaneous
+- [[https://android.stackexchange.com/questions/216123/android-how-to-increase-system-partition-and-decrease-data-partition][Thread]] discussing on increasing system partition (especially needed if there's
+  not enough space in sys partition for installing GApps, while flashing LOS)
