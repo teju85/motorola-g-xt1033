@@ -245,13 +245,14 @@ cat devinfo-XT1033
   - interestingly, installing micro gapps gave me an "Error Code: 70" saying
     insufficient space available in system partition for its install!
   - I was only successfully able to install the pico version of gapps
+  - However, I finally decided not to install gapps on my phone!
 - Copy them onto your phone's internal memory
 - Reboot to TWRP recovery
 - Select the "Wipe" option and begin the factory reset process
 - Select the "Wipe" -> "Advanced Wipe" options and select all of Dalvik cache,
   system, data and cache partitions and initiate wiping
 - Select the "Install" option from main menu and select the LineageOS ROM
-- Select the "Install" option from main menu and select the gapps suite
+- Select the "Install" option from main menu and select the gapps suite (optional!)
 - "Reboot" -> "System"
 * TODO Setting up the android build environment
 ** TODO Build branch
