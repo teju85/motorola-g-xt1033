@@ -235,12 +235,16 @@ cat devinfo-XT1033
   adb pull /sdcard/boot.img boot.img
   #+END_SRC
 - Refer to [[https://forum.xda-developers.com/t/motorola-moto-g-partitions-explained.3418644/][this]] thread for more descriptions of these partitions
-* TODO Custom ROM
-** TODO LineageOS ROM - Android 9
+* Custom ROM
+** LineageOS ROM - Android 9
 - [[https://www.droidthunder.com/android-9-0-pie-on-moto-g/][This]] article has detailed instructions on how to install Android 9 on this device
 - Download the LineageOS ROM and gapps .zip files from the above link (for gapps
   a micro is sufficient, IMO)
-  - I have also uploaded these onto my gdrive [[https://drive.google.com/file/d/1NpVVayYxHaOYLu2eqB_vZhTzWoNBzq6O/view?usp=sharing][here]] and [[https://drive.google.com/file/d/1wcbb5s40yyglhbU8HkmVg_97_-6act1D/view?usp=sharing][here]], respectively.
+  - I have also uploaded these onto my gdrive [[https://drive.google.com/file/d/1NpVVayYxHaOYLu2eqB_vZhTzWoNBzq6O/view?usp=sharing][here]] and [[https://drive.google.com/file/d/1wcbb5s40yyglhbU8HkmVg_97_-6act1D/view?usp=sharing][here (micro)]] and
+    [[https://drive.google.com/file/d/1DcG0eEjguFCpGTUil8GfBtZxqQsNx1_3/view?usp=sharing][here (pico)]], respectively.
+  - interestingly, installing micro gapps gave me an "Error Code: 70" saying
+    insufficient space available in system partition for its install!
+  - I was only successfully able to install the pico version of gapps
 - Copy them onto your phone's internal memory
 - Reboot to TWRP recovery
 - Select the "Wipe" option and begin the factory reset process
