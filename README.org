@@ -235,7 +235,7 @@ cat devinfo-XT1033
   adb pull /sdcard/boot.img boot.img
   #+END_SRC
 - Refer to [[https://forum.xda-developers.com/t/motorola-moto-g-partitions-explained.3418644/][this]] thread for more descriptions of these partitions
-* TODO Custom ROMs
+* Custom ROMs
 ** LineageOS ROM - Android 9
 - [[https://www.droidthunder.com/android-9-0-pie-on-moto-g/][This]] article has detailed instructions on how to install Android 9 on this device
 - Download the LineageOS ROM and gapps .zip files from the above link (for gapps
@@ -254,11 +254,15 @@ cat devinfo-XT1033
 - Select the "Install" option from main menu and select the LineageOS ROM
 - Select the "Install" option from main menu and select the gapps suite (optional!)
 - "Reboot" -> "System"
-** TODO LOS - Android 10!
+** LOS - Android 10!
 - [[https://forum.xda-developers.com/t/rom-10-0-falcon-lineageos-17-0-unofficial-10-12-2019.4018259/][This]] thread has more details
   - TLDR; [[https://mega.nz/folder/ys9gjQAA#XwppIsvLOiH-ftOGWzT04g][this]] is the place where one can find the unofficial builds
 - However, due to build size increase + limited system partition size, it is
   going to be difficult to install gapps without the help of Magisk
+- this also means, some of the systems apps also have been removed from this build!
+  for eg: even the browser app is not there.
+- Solution is to download firefox (personal preference) from APKMirror and install
+  the apk via adb through: "adb install <app.apk>"
 * TODO Setting up the android build environment
 ** TODO Developing using Docker
 - Instructions below are for building LineageOS from source
