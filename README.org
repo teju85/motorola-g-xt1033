@@ -259,8 +259,60 @@ cat devinfo-XT1033
 - However, due to build size increase + limited system partition size, it is
   going to be difficult to install gapps without the help of Magisk
 * TODO Setting up the android build environment
-** TODO Build branch
-- 
+** TODO Developing using Docker
+- Instructions below are for building LineageOS from source
+- Thanks to the detailed instructions on LOS wiki page [[https://lineageosroms.com/falcon/#build][here]]
+*** docker image
+- Dockerfile in the current dir should have all the relevant dependencies taken
+  care of for building android from source
+- Build it using
+#+BEGIN_SRC
+docker build --build-arg userid=$(id -u) \
+  --build-arg groupid=$(id -g) \
+  --build-arg username=$(id -un) \
+  -t android-build .
+#+END_SRC
+*** docker container
+- Launch the container using
+#+BEGIN_SRC
+export ANDROID_TREE=/path/to/root/of/your/tree
+mkdir -p $ANDROID_TREE
+docker run -it --rm -v $ANDROID_TREE:/android-src android-build /bin/bash
+#+END_SRC
+*** repo init
+- to be executed once inside container
+- pass the right value for the 'BRANCH' env-var
+#+BEGIN_SRC
+git config --global user.email "you@example.com"
+git config --global user.name "Your Name"
+cd /android-src
+repo init -u https://android.googlesource.com/platform/manifest -b $BRANCH
+ccache -M 50G
+#+END_SRC
+*** repo sync
+#+BEGIN_SRC
+cd /android-src
+repo sync -j4
+#+END_SRC
+- Use 'make clobber' to perform a clean build (eg. after copying vendor blobs)
+*** how to extract proprietary blobs?
+- Refer to [[https://github.com/LineageOS/android_device_motorola_falcon][repo]] on github and look at the script extract-files.sh
+- Or after the 'repo sync' is done above, inside the container, look at the
+  file '/android-src/device/motorola/falcon/extract-files.sh'
+- you can even copy it over to a local machine where the device is connected
+  to USB, extract the binaries and then send them over to
+  '/android-src/vendor/motorola' inside your container (especially when your
+  build machine is somewhere remote)
+- can also extract these blobs from another build .zip files, more info [[https://lineageosroms.com/extracting-blobs-from-zips/][here]]
+*** build
+#+BEGIN_SRC
+cd /android-src
+source build/envsetup.sh
+breakfast falcon   # downloads device's config and kernel
+croot
+brunch falcon
+# $OUT folder will contain the build binaries!
+#+END_SRC
 ** TODO figure out the build configuration for aosp + xt1033
 - refer to [[https://source.android.com/setup/build/building#initialize][this]] section
   - name typically is of the following format: <tree>_<deviceCodename>-<buildtype>
@@ -275,9 +327,7 @@ cat devinfo-XT1033
   - getprop doesn't seem to show the kernel version against which stockrom was built!
   - `ro.serialno` - serial number that's seen while connecting via adb/fastboot
 - refer also to the 'adding a new device' doc [[https://source.android.com/setup/develop/new-device#userdebug-guidelines][here]]
-* TODO how to extract proprietary blobs?
-- Refer to [[https://github.com/LineageOS/android_device_motorola_falcon][repo]] on github
-- look at the script extract-files.sh
 * Miscellaneous
 - [[https://android.stackexchange.com/questions/216123/android-how-to-increase-system-partition-and-decrease-data-partition][Thread]] discussing on increasing system partition (especially needed if there's
   not enough space in sys partition for installing GApps, while flashing LOS)
+- Fun read on [[https://www.xda-developers.com/how-a-b-partitions-and-seamless-updates-affect-custom-development-on-xda/][A/B partitions]].
