@@ -256,6 +256,7 @@ cat devinfo-XT1033
 - "Reboot" -> "System"
 ** TODO LOS - Android 10!
 - [[https://forum.xda-developers.com/t/rom-10-0-falcon-lineageos-17-0-unofficial-10-12-2019.4018259/][This]] thread has more details
+  - TLDR; [[https://mega.nz/folder/ys9gjQAA#XwppIsvLOiH-ftOGWzT04g][this]] is the place where one can find the unofficial builds
 - However, due to build size increase + limited system partition size, it is
   going to be difficult to install gapps without the help of Magisk
 * TODO Setting up the android build environment
