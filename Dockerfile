@@ -42,6 +42,7 @@ RUN apt-get update && \
         squashfs-tools \
         xsltproc \
         unzip \
+        wget \
         xsltproc \
         x11proto-core-dev \
         zip \
@@ -50,26 +51,24 @@ RUN apt-get update && \
 
 RUN curl -o jdk8.tgz https://android.googlesource.com/platform/prebuilts/jdk/jdk8/+archive/master.tar.gz && \
     tar -zxf jdk8.tgz linux-x86 && \
+    mkdir -p /usr/lib/jvm && \
     mv linux-x86 /usr/lib/jvm/java-8-openjdk-amd64 && \
     rm -rf jdk8.tgz
 
 RUN curl -o /usr/local/bin/repo https://storage.googleapis.com/git-repo-downloads/repo && \
-    echo "d06f33115aea44e583c8669375b35aad397176a411de3461897444d247b6c220  /usr/local/bin/repo" | sha256sum --strict -c - && \
     chmod a+x /usr/local/bin/repo
 
-RUN groupadd -g $gid $user && \
-    useradd -m -u $uid -g $gid $user && \
+RUN useradd -m -u $uid -g $gid $user && \
     echo $user > /root/username
 
 ENV HOME=/home/$user
 ENV USER=$user
 ENV USE_CCACHE=1
 ENV CCACHE_EXEC=/usr/bin/ccache
-ENV PATH=/home/$user/platform-tools:/usr/local/bin:$PATH
+ENV PATH=/home/$user/platform-tools:/usr/local/bin:/usr/lib/jvm/java-8-openjdk-amd64:$PATH
 ENV ANDROID_JACK_VM_ARGS="-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx4G"
 
-RUN curl -o platform-tools-latest-linux.zip \
-        https://dl.google.com/android/repository/platform-tools-latest-linux.zip && \
+RUN wget https://dl.google.com/android/repository/platform-tools-latest-linux.zip && \
     unzip platform-tools-latest-linux.zip -d /home/$user && \
     rm -f platform-tools-latest-linux.zip
 

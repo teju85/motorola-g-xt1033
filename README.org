@@ -263,7 +263,7 @@ cat devinfo-XT1033
   for eg: even the browser app is not there.
 - Solution is to download firefox (personal preference) from APKMirror and install
   the apk via adb through: "adb install <app.apk>"
-* TODO Setting up the android build environment
+* TODO LineageOS build from source
 ** TODO Developing using Docker
 - Instructions below are for building LineageOS from source
 - Thanks to the detailed instructions on LOS wiki page [[https://lineageosroms.com/falcon/#build][here]]
@@ -272,35 +272,35 @@ cat devinfo-XT1033
   care of for building android from source
 - Build it using
 #+BEGIN_SRC
-docker build --build-arg userid=$(id -u) \
-  --build-arg groupid=$(id -g) \
-  --build-arg username=$(id -un) \
-  -t android-build .
+docker build --build-arg uid=$(id -u) \
+  --build-arg gid=$(id -g) \
+  --build-arg user=$(id -un) \
+  -t android-build:moto-g-xt1033 .
 #+END_SRC
-*** docker container
+*** TODO docker container
 - Launch the container using
 #+BEGIN_SRC
 export ANDROID_TREE=/path/to/root/of/your/tree
 mkdir -p $ANDROID_TREE
-docker run -it --rm -v $ANDROID_TREE:/android-src android-build /bin/bash
+docker run -it --rm -v $ANDROID_TREE:/android-src android-build:moto-g-xt1033
 #+END_SRC
-*** repo init
+*** TODO repo init
 - to be executed once inside container
 - pass the right value for the 'BRANCH' env-var
 #+BEGIN_SRC
 git config --global user.email "you@example.com"
 git config --global user.name "Your Name"
 cd /android-src
-repo init -u https://android.googlesource.com/platform/manifest -b $BRANCH
+repo init -u https://github.com/LineageOS/android.git -b $BRANCH
 ccache -M 50G
 #+END_SRC
-*** repo sync
+*** TODO repo sync
 #+BEGIN_SRC
 cd /android-src
 repo sync -j4
 #+END_SRC
 - Use 'make clobber' to perform a clean build (eg. after copying vendor blobs)
-*** how to extract proprietary blobs?
+*** TODO how to extract proprietary blobs?
 - Refer to [[https://github.com/LineageOS/android_device_motorola_falcon][repo]] on github and look at the script extract-files.sh
 - Or after the 'repo sync' is done above, inside the container, look at the
   file '/android-src/device/motorola/falcon/extract-files.sh'
@@ -309,7 +309,7 @@ repo sync -j4
   '/android-src/vendor/motorola' inside your container (especially when your
   build machine is somewhere remote)
 - can also extract these blobs from another build .zip files, more info [[https://lineageosroms.com/extracting-blobs-from-zips/][here]]
-*** build
+*** TODO build
 #+BEGIN_SRC
 cd /android-src
 source build/envsetup.sh
