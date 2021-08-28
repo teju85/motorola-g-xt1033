@@ -277,6 +277,12 @@ docker build --build-arg uid=$(id -u) \
   --build-arg user=$(id -un) \
   -t android-build:moto-g-xt1033 .
 #+END_SRC
+- Prebuilt image can also be downloaded from dockerhub as
+#+BEGIN_SRC
+docker pull teju85/android-build:moto-g-xt1033
+docker tag teju85/android-build:moto-g-xt1033 android-build:moto-g-xt1033
+docker rmi teju85/android-build:moto-g-xt1033
+#+END_SRC
 *** TODO docker container
 - Launch the container using
 #+BEGIN_SRC
