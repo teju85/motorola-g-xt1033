@@ -257,6 +257,7 @@ cat devinfo-XT1033
 ** LOS - Android 10!
 - [[https://forum.xda-developers.com/t/rom-10-0-falcon-lineageos-17-0-unofficial-10-12-2019.4018259/][This]] thread has more details
   - TLDR; [[https://mega.nz/folder/ys9gjQAA#XwppIsvLOiH-ftOGWzT04g][this]] is the place where one can find the unofficial builds
+  - Sadly, the above link is no longer working!! :(
 - However, due to build size increase + limited system partition size, it is
   going to be difficult to install gapps without the help of Magisk
 - this also means, some of the systems apps also have been removed from this build!
@@ -283,14 +284,14 @@ docker pull teju85/android-build:moto-g-xt1033
 docker tag teju85/android-build:moto-g-xt1033 android-build:moto-g-xt1033
 docker rmi teju85/android-build:moto-g-xt1033
 #+END_SRC
-*** TODO docker container
+*** docker container
 - Launch the container using
 #+BEGIN_SRC
 export ANDROID_TREE=/path/to/root/of/your/tree
 mkdir -p $ANDROID_TREE
 docker run -it --rm -v $ANDROID_TREE:/android-src android-build:moto-g-xt1033
 #+END_SRC
-*** TODO repo init
+*** repo init
 - to be executed once inside container
 - pass the right value for the 'BRANCH' env-var
 #+BEGIN_SRC
