@@ -7,6 +7,7 @@ RUN apt-get update && \
     apt-get install -y \
         bc \
         bison \
+	brotli \
         build-essential \
         ccache \
         curl \
@@ -58,6 +59,8 @@ RUN curl -o jdk8.tgz https://android.googlesource.com/platform/prebuilts/jdk/jdk
 RUN curl -o /usr/local/bin/repo https://storage.googleapis.com/git-repo-downloads/repo && \
     chmod a+x /usr/local/bin/repo
 
+RUN git clone https://github.com/xpirt/sdat2img /usr/local/sdat2img
+
 RUN useradd -m -u $uid -g $gid $user && \
     echo $user > /root/username
 
@@ -65,7 +68,8 @@ ENV HOME=/home/$user
 ENV USER=$user
 ENV USE_CCACHE=1
 ENV CCACHE_EXEC=/usr/bin/ccache
-ENV PATH=/home/$user/platform-tools:/usr/local/bin:/usr/lib/jvm/java-8-openjdk-amd64:$PATH
+ENV PATH=/home/$user/platform-tools:/usr/local/bin:$PATH
+ENV PATH=/usr/lib/jvm/java-8-openjdk-amd64:/usr/local/sdat2img:$PATH
 ENV ANDROID_JACK_VM_ARGS="-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx4G"
 
 RUN wget https://dl.google.com/android/repository/platform-tools-latest-linux.zip && \

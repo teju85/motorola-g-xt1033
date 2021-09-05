@@ -303,12 +303,19 @@ cd /android-src
 repo init -u https://github.com/LineageOS/android.git -b $BRANCH
 ccache -M 50G
 #+END_SRC
-*** TODO repo sync
+*** repo sync
 #+BEGIN_SRC
 cd /android-src
 repo sync -j4
 #+END_SRC
 - Use 'make clobber' to perform a clean build (eg. after copying vendor blobs)
+*** TODO breakfast!
+    - This step will download your device-specific config and kernel repo's
+#+BEGIN_SRC
+cd /android-src
+source build/envsetup.sh
+breakfast falcon
+#+END_SRC
 *** TODO how to extract proprietary blobs?
 - Refer to [[https://github.com/LineageOS/android_device_motorola_falcon][repo]] on github and look at the script extract-files.sh
 - Or after the 'repo sync' is done above, inside the container, look at the
@@ -318,11 +325,13 @@ repo sync -j4
   '/android-src/vendor/motorola' inside your container (especially when your
   build machine is somewhere remote)
 - can also extract these blobs from another build .zip files, more info [[https://lineageosroms.com/extracting-blobs-from-zips/][here]]
+  - from this link and from the unofficial 17.1 build link from the previous
+    section, we can notice that this zip file is a block-based OTA
+  - further, it is also NOT a split block-based OTA
 *** TODO build
 #+BEGIN_SRC
 cd /android-src
 source build/envsetup.sh
-breakfast falcon   # downloads device's config and kernel
 croot
 brunch falcon
 # $OUT folder will contain the build binaries!
