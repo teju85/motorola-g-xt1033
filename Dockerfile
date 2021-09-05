@@ -71,6 +71,8 @@ ENV CCACHE_EXEC=/usr/bin/ccache
 ENV PATH=/home/$user/platform-tools:/usr/local/bin:$PATH
 ENV PATH=/usr/lib/jvm/java-8-openjdk-amd64:/usr/local/sdat2img:$PATH
 ENV ANDROID_JACK_VM_ARGS="-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx4G"
+# This fixes locale related assertion with flex!
+ENV LANG="en_DE.UTF-8"
 
 RUN wget https://dl.google.com/android/repository/platform-tools-latest-linux.zip && \
     unzip platform-tools-latest-linux.zip -d /home/$user && \
