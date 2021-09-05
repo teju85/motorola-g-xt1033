@@ -266,8 +266,7 @@ cat devinfo-XT1033
   for eg: even the browser app is not there.
 - Solution is to download firefox (personal preference) from APKMirror and install
   the apk via adb through: "adb install <app.apk>"
-* TODO LineageOS build from source
-** TODO Developing using Docker
+* LineageOS build from source (official 14.1)
 - Instructions below are for building LineageOS from source
 - Thanks to the detailed instructions on LOS wiki page [[https://lineageosroms.com/falcon/#build][here]]
 *** docker image
@@ -333,7 +332,7 @@ breakfast falcon
   cd device/$vendor/$board
   ./extract-files.sh -d /path/to/system/mount
   #+END_SRC
-*** TODO build
+*** build
 #+BEGIN_SRC
 cd /android-src
 source build/envsetup.sh
@@ -341,20 +340,8 @@ croot
 brunch falcon
 # $OUT folder will contain the build binaries!
 #+END_SRC
-** TODO figure out the build configuration for aosp + xt1033
-- refer to [[https://source.android.com/setup/build/building#initialize][this]] section
-  - name typically is of the following format: <tree>_<deviceCodename>-<buildtype>
-  - <buildtype> is one of:
-    - user
-    - userdebug
-    - eng
-  - from the prop=ro.product.manufacturer, manufacturer is 'manufacturer'
-  - from the prop=ro.product.device, device is 'falcon_umtsds'
-  - from the prop=ro.build.product, codename is 'falcon_umtsds'
-  - thus, product name will be 'aosp_falcon_umtsds'?????
-  - getprop doesn't seem to show the kernel version against which stockrom was built!
-  - `ro.serialno` - serial number that's seen while connecting via adb/fastboot
-- refer also to the 'adding a new device' doc [[https://source.android.com/setup/develop/new-device#userdebug-guidelines][here]]
+* TODO LineageOS upgrade to 17.1 and build from source
+  - Still trying to figure this out!
 * Miscellaneous
 - [[https://android.stackexchange.com/questions/216123/android-how-to-increase-system-partition-and-decrease-data-partition][Thread]] discussing on increasing system partition (especially needed if there's
   not enough space in sys partition for installing GApps, while flashing LOS)
