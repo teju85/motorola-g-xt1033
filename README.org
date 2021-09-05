@@ -320,15 +320,19 @@ breakfast falcon
 - extract these blobs from another build *.zip file, more info [[https://lineageosroms.com/extracting-blobs-from-zips/][here]]
   - from this link and from the official 14.1 build link from the lineageOS
     webpage for falcon [[https://lineageosroms.com/falcon/][here]]
-  - We can notice that this zip file is a block-based OTA
-  - further, it is also NOT a split block-based OTA
-  - after you have mounted this build's "system" folder, you need to run the
-    following command
+  - Or, just run the below command
     #+BEGIN_SRC
-    cd /android-src
-    cd device/$vendor/$board
-    ./extract-files.sh -d /path/to/system/mount
+    wget http://dlr.ovh:8080/falcon/lineage-14.1-20190207-nightly-falcon-signed.zip
     #+END_SRC
+- We can notice that this zip file is a block-based OTA
+- further, it is also NOT a split block-based OTA
+- after you have mounted this build's "system" folder, you need to run the
+  following command
+  #+BEGIN_SRC
+  cd /android-src
+  cd device/$vendor/$board
+  ./extract-files.sh -d /path/to/system/mount
+  #+END_SRC
 *** TODO build
 #+BEGIN_SRC
 cd /android-src
