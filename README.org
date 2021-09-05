@@ -269,7 +269,7 @@ cat devinfo-XT1033
 * LineageOS build from source (official 14.1)
 - Instructions below are for building LineageOS from source
 - Thanks to the detailed instructions on LOS wiki page [[https://lineageosroms.com/falcon/#build][here]]
-*** docker image
+** docker image
 - Dockerfile in the current dir should have all the relevant dependencies taken
   care of for building android from source
 - Build it using
@@ -285,14 +285,14 @@ docker pull teju85/android-build:moto-g-xt1033
 docker tag teju85/android-build:moto-g-xt1033 android-build:moto-g-xt1033
 docker rmi teju85/android-build:moto-g-xt1033
 #+END_SRC
-*** docker container
+** docker container
 - Launch the container using
 #+BEGIN_SRC
 export ANDROID_TREE=/path/to/root/of/your/tree
 mkdir -p $ANDROID_TREE
 docker run -it --rm -v $ANDROID_TREE:/android-src android-build:moto-g-xt1033
 #+END_SRC
-*** repo init
+** repo init
 - to be executed once inside container
 - pass the right value for the 'BRANCH' env-var
 #+BEGIN_SRC
@@ -302,20 +302,20 @@ cd /android-src
 repo init -u https://github.com/LineageOS/android.git -b $BRANCH
 ccache -M 50G
 #+END_SRC
-*** repo sync
+** repo sync
 #+BEGIN_SRC
 cd /android-src
 repo sync -j4
 #+END_SRC
 - Use 'make clobber' to perform a clean build (eg. after copying vendor blobs)
-*** breakfast!
+** breakfast!
     - This step will download your device-specific config and kernel repo's
 #+BEGIN_SRC
 cd /android-src
 source build/envsetup.sh
 breakfast falcon
 #+END_SRC
-*** how to extract proprietary blobs?
+** how to extract proprietary blobs?
 - extract these blobs from another build *.zip file, more info [[https://lineageosroms.com/extracting-blobs-from-zips/][here]]
   - from this link and from the official 14.1 build link from the lineageOS
     webpage for falcon [[https://lineageosroms.com/falcon/][here]]
@@ -332,7 +332,7 @@ breakfast falcon
   cd device/$vendor/$board
   ./extract-files.sh -d /path/to/system/mount
   #+END_SRC
-*** build
+** build
 #+BEGIN_SRC
 cd /android-src
 source build/envsetup.sh
@@ -341,7 +341,12 @@ brunch falcon
 # $OUT folder will contain the build binaries!
 #+END_SRC
 * TODO LineageOS upgrade to 17.1 and build from source
-  - Still trying to figure this out!
+- Following are the three device-specific repo's under LineageOS
+  - [[https://github.com/LineageOS/android_device_motorola_msm8226-common][android_device_motorola_msm8226-common]]
+  - [[https://github.com/LineageOS/android_device_motorola_falcon][android_device_motorola_falcon]]
+  - [[https://github.com/LineageOS/android_kernel_motorola_msm8226][android_kernel_motorola_msm8226]]
+- First step I did was to create a "lineage-17.1" branch on a fork of all these repos
+- Need to figure out how to tell "repo" command to pick my fork instead of the default LOS!
 * Miscellaneous
 - [[https://android.stackexchange.com/questions/216123/android-how-to-increase-system-partition-and-decrease-data-partition][Thread]] discussing on increasing system partition (especially needed if there's
   not enough space in sys partition for installing GApps, while flashing LOS)
