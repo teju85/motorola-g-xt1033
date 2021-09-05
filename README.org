@@ -238,9 +238,10 @@ cat devinfo-XT1033
 * Custom ROMs
 ** LineageOS ROM - Android 9
 - [[https://www.droidthunder.com/android-9-0-pie-on-moto-g/][This]] article has detailed instructions on how to install Android 9 on this device
+  - I have also copied over to gdrive location [[https://drive.google.com/file/d/1NpVVayYxHaOYLu2eqB_vZhTzWoNBzq6O/view?usp=sharing][here]]
 - Download the LineageOS ROM and gapps .zip files from the above link (for gapps
   a micro is sufficient, IMO)
-  - I have also uploaded these onto my gdrive [[https://drive.google.com/file/d/1NpVVayYxHaOYLu2eqB_vZhTzWoNBzq6O/view?usp=sharing][here]] and [[https://drive.google.com/file/d/1wcbb5s40yyglhbU8HkmVg_97_-6act1D/view?usp=sharing][here (micro)]] and
+  - I have also uploaded these onto my gdrive [[https://drive.google.com/file/d/1wcbb5s40yyglhbU8HkmVg_97_-6act1D/view?usp=sharing][here (micro)]] and
     [[https://drive.google.com/file/d/1DcG0eEjguFCpGTUil8GfBtZxqQsNx1_3/view?usp=sharing][here (pico)]], respectively.
   - interestingly, installing micro gapps gave me an "Error Code: 70" saying
     insufficient space available in system partition for its install!
@@ -255,9 +256,10 @@ cat devinfo-XT1033
 - Select the "Install" option from main menu and select the gapps suite (optional!)
 - "Reboot" -> "System"
 ** LOS - Android 10!
-- [[https://forum.xda-developers.com/t/rom-10-0-falcon-lineageos-17-0-unofficial-10-12-2019.4018259/][This]] thread has more details
+- [[https://forum.xda-developers.com/t/rom-10-0-falcon-lineageos-17-0-unofficial-10-12-2019.4018259/][This]] thread has more details on LOS 17.1 installation
   - TLDR; [[https://mega.nz/folder/ys9gjQAA#XwppIsvLOiH-ftOGWzT04g][this]] is the place where one can find the unofficial builds
   - Sadly, the above link is no longer working!! :(
+  - But I have copied it over to my gdrive location [[https://drive.google.com/file/d/1ixjPKtHftcUpuFCSyS6eannarOGcxkK2/view?usp=sharing][here]]
 - However, due to build size increase + limited system partition size, it is
   going to be difficult to install gapps without the help of Magisk
 - this also means, some of the systems apps also have been removed from this build!
