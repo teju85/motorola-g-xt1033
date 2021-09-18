@@ -269,49 +269,31 @@ cat devinfo-XT1033
 * LineageOS build from source (official 14.1)
 - Instructions below are for building LineageOS from source
 - Thanks to the detailed instructions on LOS wiki page [[https://lineageosroms.com/falcon/#build][here]]
-** docker image
-- Dockerfile in the current dir should have all the relevant dependencies taken
-  care of for building android from source
-- Build it using
-#+BEGIN_SRC
-docker build --build-arg uid=$(id -u) \
-  --build-arg gid=$(id -g) \
-  --build-arg user=$(id -un) \
-  -t android-build:moto-g-xt1033 .
-#+END_SRC
-- Prebuilt image can also be downloaded from dockerhub as
-#+BEGIN_SRC
-docker pull teju85/android-build:moto-g-xt1033
-docker tag teju85/android-build:moto-g-xt1033 android-build:moto-g-xt1033
-docker rmi teju85/android-build:moto-g-xt1033
-#+END_SRC
-** docker container
-- Launch the container using
-#+BEGIN_SRC
-export ANDROID_TREE=/path/to/root/of/your/tree
-mkdir -p $ANDROID_TREE
-docker run -it --rm -v $ANDROID_TREE:/android-src android-build:moto-g-xt1033
-#+END_SRC
+- I'm also sticking to WSL2 for building android from source as described in
+  [[https://www.xda-developers.com/how-to-build-lineageos-on-windows-10-using-wsl-2/][this]] blogpost
+** Setup
+- one-time - setup: ./setup-wsl2.sh
+- everytime, if starting on a fresh terminal: source ./env-wsl2.sh
 ** repo init
 - to be executed once inside container
 - pass the right value for the 'BRANCH' env-var
 #+BEGIN_SRC
 git config --global user.email "you@example.com"
 git config --global user.name "Your Name"
-cd /android-src
+cd /path/to/android-src
 repo init -u https://github.com/LineageOS/android.git -b $BRANCH
 ccache -M 50G
 #+END_SRC
 ** repo sync
 #+BEGIN_SRC
-cd /android-src
+cd /path/to/android-src
 repo sync -j4
 #+END_SRC
 - Use 'make clobber' to perform a clean build (eg. after copying vendor blobs)
 ** breakfast!
-    - This step will download your device-specific config and kernel repo's
+- This step will download your device-specific config and kernel repo's
 #+BEGIN_SRC
-cd /android-src
+cd /path/to/android-src
 source build/envsetup.sh
 breakfast falcon
 #+END_SRC
